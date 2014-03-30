@@ -23,7 +23,7 @@
 
 	<welcome-file-list>
 		<welcome-file>
-      login.html
+      /WEB-INF/jsp/login.html
     </welcome-file>
 	</welcome-file-list>
 
