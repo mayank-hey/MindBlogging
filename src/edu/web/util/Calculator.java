@@ -25,4 +25,16 @@ public class Calculator {
 		}
 		return latestScore + (int)(sumOfWtdScoreDiff/sumOfInvertedTimeDiff);
 	}
+	
+	public boolean needsHelp(ArrayList<Integer> scores){
+		if(scores.size()<7)
+			return false;
+		int sumOfScores=0;
+		for(int i=0; i<7; i++){
+			sumOfScores+=i;
+		}
+		if(sumOfScores/7 <= 3)
+			return true;
+		return false;
+	}
 }
