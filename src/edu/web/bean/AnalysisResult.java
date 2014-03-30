@@ -12,7 +12,7 @@ public class AnalysisResult {
 	
 	ArrayList<String> terms = new ArrayList<String>();
 	
-	public double getEmoScore() {
+	public int getEmoScore() {
 		return emoScore;
 	}
 	public void setEmoScore(int emoScore) {
