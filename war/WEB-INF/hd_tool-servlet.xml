@@ -55,6 +55,11 @@
 
 	<bean id="postInfoController" class="edu.web.controller.PostInfoController">
 		<property name="postDao" ref="postDao" />
+		<property name="skyttleClient" ref="skyttleClient" />
+	</bean>
+	
+	<bean id="loginController" class="edu.web.controller.LoginController">
+		<property name="postDao" ref="postDao" />
 		<property name="userDao" ref="userDao" />
 	</bean>
 
@@ -91,6 +96,9 @@
 				</prop>
 				<prop key="/fetch_blog_posts.htm">
 					postInfoController
+				</prop>
+				<prop key="/login.htm">
+					loginController
 				</prop>
 			</props>
 		</property>

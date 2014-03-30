@@ -28,13 +28,13 @@ public class SkyttleClient {
 	
 	private static final String YOUR_MASHAPE_KEY = "ruitZa9vMUWWZH3yD0IFELMhsI9UedaM";//+"123";
 
-	public static void main(String[] args) throws UnsupportedEncodingException{
-		
-		AnalysisResult analResult = analyzeText("");
-		System.out.println(analResult);
-		//System.out.println("Response: " + response);
-
-	}
+//	public static void main(String[] args) throws UnsupportedEncodingException{
+//		
+//		AnalysisResult analResult = analyzeText("");
+//		System.out.println(analResult);
+//		//System.out.println("Response: " + response);
+//
+//	}
 	
 	public static AnalysisResult analyzeText(String text){
 		String url = "https://sentinelprojects-skyttle20.p.mashape.com/";

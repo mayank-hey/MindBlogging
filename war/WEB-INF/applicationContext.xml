@@ -28,6 +28,9 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<bean id="skyttleClient" class="edu.web.bo.SkyttleClient">
+	</bean>
+
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />

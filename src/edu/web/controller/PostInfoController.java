@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.web.bean.AnalysisResult;
 import edu.web.bean.PostInfo;
+import edu.web.bo.SkyttleClient;
 import edu.web.dainterface.IPostDao;
-import edu.web.dainterface.IUserDao;
 
 /**
  * @author rohansabnis
@@ -23,32 +24,65 @@ import edu.web.dainterface.IUserDao;
 public class PostInfoController {
 
 	private IPostDao postDao;
-	private IUserDao userDao;
+	// private IUserDao userDao;
+	private SkyttleClient skyttleClient;
 
 	@RequestMapping(value = "/add_post", method = RequestMethod.POST)
 	public @ResponseBody
-	PostInfo add(@RequestBody PostInfo postInfo) throws Exception {
+	List<PostInfo> add(@RequestBody PostInfo postInfo) throws Exception {
 
 		int flag = 0;
-		flag = this.userDao.check_user(postInfo.getUser_name());
+		AnalysisResult analResult = new AnalysisResult();
+		// flag = this.userDao.check_user(postInfo.getUser_name());
 
-		if (flag == 1) {
-			if (postInfo.getPost_terms() != null
-					&& postInfo.getPost_terms().size() != 0) {
-				String term_list = "";
-				for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
-					if (i == 0)
-						term_list = postInfo.getPost_terms().get(i);
-					else
-						term_list = term_list + ","
-								+ postInfo.getPost_terms().get(i);
-				}
-				postInfo.setPost_terms_list(term_list);
+		// if (flag == 1) {
+		if (postInfo.getPost_terms() != null
+				&& postInfo.getPost_terms().size() != 0) {
+			String term_list = "";
+			for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
+				if (i == 0)
+					term_list = postInfo.getPost_terms().get(i);
+				else
+					term_list = term_list + ","
+							+ postInfo.getPost_terms().get(i);
 			}
-			postInfo = this.postDao.addPost(postInfo);
+			postInfo.setPost_terms_list(term_list);
+		}
+		analResult = this.skyttleClient.analyzeText(postInfo.getPost_text());
+		postInfo.setEmo_score(analResult.getEmoScore());
+		postInfo.setPost_terms(analResult.getKeywords());
+		if (postInfo.getPost_terms() != null
+				&& postInfo.getPost_terms().size() != 0) {
+			String term_list = "";
+			for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
+				if (i == 0)
+					term_list = postInfo.getPost_terms().get(i);
+				else
+					term_list = term_list + ","
+							+ postInfo.getPost_terms().get(i);
+			}
+			postInfo.setPost_terms_list(term_list);
+		}
+		postInfo = this.postDao.addPost(postInfo);
+		// }
+
+		List<PostInfo> post_info_list = new ArrayList<PostInfo>();
+
+		post_info_list = this.postDao.getBlogPosts(postInfo);
+
+		for (int i = 0; i < post_info_list.size(); i++) {
+			String term_list = post_info_list.get(i).getPost_terms_list();
+			if (term_list.contains(",")) {
+				String[] terms_array = term_list.split(",");
+				post_info_list.get(i).setPost_terms(Arrays.asList(terms_array));
+			} else {
+				List terms = new ArrayList();
+				terms.add(term_list);
+				post_info_list.get(i).setPost_terms(terms);
+			}
 		}
 
-		return postInfo;
+		return post_info_list;
 	}
 
 	@RequestMapping(value = "/fetch_blog_posts", method = RequestMethod.POST)
@@ -60,8 +94,14 @@ public class PostInfoController {
 
 		for (int i = 0; i < post_info_list.size(); i++) {
 			String term_list = post_info_list.get(i).getPost_terms_list();
-			String[] terms_array = term_list.split(",");
-			post_info_list.get(i).setPost_terms(Arrays.asList(terms_array));
+			if (term_list.contains(",")) {
+				String[] terms_array = term_list.split(",");
+				post_info_list.get(i).setPost_terms(Arrays.asList(terms_array));
+			} else {
+				List terms = new ArrayList();
+				terms.add(term_list);
+				post_info_list.get(i).setPost_terms(terms);
+			}
 		}
 
 		return post_info_list;
@@ -69,7 +109,7 @@ public class PostInfoController {
 
 	@RequestMapping(value = "/update_post", method = RequestMethod.POST)
 	public @ResponseBody
-	PostInfo update(@RequestBody PostInfo postInfo) throws Exception {
+	List<PostInfo> update(@RequestBody PostInfo postInfo) throws Exception {
 
 		if (postInfo.getPost_terms() != null
 				&& postInfo.getPost_terms().size() != 0) {
@@ -81,10 +121,28 @@ public class PostInfoController {
 					term_list = term_list + ","
 							+ postInfo.getPost_terms().get(i);
 			}
+			postInfo.setPost_terms_list(term_list);
 		}
 
 		postInfo = this.postDao.updatePost(postInfo);
-		return postInfo;
+		List<PostInfo> post_info_list = new ArrayList<PostInfo>();
+
+		post_info_list = this.postDao.getBlogPosts(postInfo);
+
+		for (int i = 0; i < post_info_list.size(); i++) {
+			String term_list = post_info_list.get(i).getPost_terms_list();
+			if (term_list.contains(",")) {
+				String[] terms_array = term_list.split(",");
+				post_info_list.get(i).setPost_terms(Arrays.asList(terms_array));
+			} else {
+				List terms = new ArrayList();
+				terms.add(term_list);
+				post_info_list.get(i).setPost_terms(terms);
+			}
+		}
+
+		return post_info_list;
+
 	}
 
 	/**
@@ -103,18 +161,11 @@ public class PostInfoController {
 	}
 
 	/**
-	 * @return the userDao
+	 * @param skyttleClient
+	 *            the skyttleClient to set
 	 */
-	public IUserDao getUserDao() {
-		return userDao;
-	}
-
-	/**
-	 * @param userDao
-	 *            the userDao to set
-	 */
-	public void setUserDao(IUserDao userDao) {
-		this.userDao = userDao;
+	public void setSkyttleClient(SkyttleClient skyttleClient) {
+		this.skyttleClient = skyttleClient;
 	}
 
 }
