@@ -197,11 +197,8 @@ function updatelevel() {
 		
 			<div class="userlist">
 				<ul type="none">
-					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
-					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
-					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
-					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
-					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
+					<li class="user" ><div><div><label class="username userlabel">User:Gaurav</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
+        			<li class="user" ><div><div><label class="username userlabel">User:Mayank</label></div><div><label class="level userlabel" style="float:left;">Level:9</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
 				</ul> 
 			</div>
         <input type="hidden" id="user_id" value="${model.logged_in_user}"/>
