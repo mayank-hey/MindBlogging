@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<mvc:annotation-driven />
+	<!-- By default the spring mvc defines 3 different request handler adapters, 
+		they are org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter, org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter, 
+		org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter 
+		So you need not have to define them in your context file, but if you define 
+		at least one handler adapter in your context files, spring will not create 
+		the default adapters. In my configuration I am using <mvc:annotation-driven 
+		/>, according to this spring documentation this will cause the context to 
+		define both DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter. 
+		Since we are creating the AnnotationMethodHandlerAdapter in our context definition 
+		spring will not create the other two handlerAdapters. The beanNameUrlMapping 
+		needs the handlerAdapter SimpleControllerHandlerAdapter. Hence added the 
+		below bean class -->
+
+	<bean
+		class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter">
+	</bean>
+
+	<!-- <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"> 
+		</bean> -->
+	<!-- the application context definition for the hd_tool DispatcherServlet -->
+
+	<bean id="helloController" class="edu.web.controller.HelloController">
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
+
+	<bean id="inventoryController" class="edu.web.controller.InventoryController">
+		<property name="productManager" ref="productManager" />
+	</bean>
+
+	<bean id="priceIncreaseFormController" class="edu.web.controller.PriceIncreaseFormController">
+		<property name="sessionForm" value="true" />
+		<property name="commandName" value="priceIncrease" />
+		<property name="commandClass" value="edu.web.bean.PriceIncrease" />
+		<property name="validator">
+			<bean class="edu.web.dao.PriceIncreaseValidator" />
+		</property>
+		<property name="formView" value="priceincrease" />
+		<property name="successView" value="hello.htm" />
+		<property name="productManager" ref="productManager" />
+	</bean>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+
+		<property name="mappings">
+			<props>
+				<prop key="/hello.htm">inventoryController</prop>
+				<prop key="/hello2.htm">helloController</prop>
+				<prop key="/priceincrease.htm">
+					priceIncreaseFormController
+				</prop>
+			</props>
+		</property>
+
+	</bean>
+
+</beans>
