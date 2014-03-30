@@ -27,10 +27,10 @@
 
     <div class="container">
 
-      <form class="form-signin" role="form">
+      <form class="form-signin" action="login.htm" commandName="userInfo" method="POST">
         <h3 class="form-signin-heading">Sign In</h3>
-        <input type="email" class="form-control" placeholder="Email address" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" required>
+        <input name="user_name" id="user_name" type="text" class="form-control" placeholder="User Name" required autofocus>
+        <input name="password" id="password" type="password" class="form-control" placeholder="Password" required>
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Remember me
         </label>

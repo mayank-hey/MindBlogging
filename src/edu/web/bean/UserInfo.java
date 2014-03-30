@@ -17,6 +17,7 @@ public class UserInfo implements Serializable {
 	private String first_name;
 	private String last_name;
 	private String password;
+	private String email;
 	private String message;
 	private int status;
 	/**
@@ -102,6 +103,18 @@ public class UserInfo implements Serializable {
 	 */
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
+	}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

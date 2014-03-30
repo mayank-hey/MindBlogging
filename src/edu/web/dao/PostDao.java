@@ -53,7 +53,7 @@ public class PostDao extends SimpleJdbcDaoSupport implements IPostDao {
 
 	public List<PostInfo> getBlogPosts(PostInfo postInfo) {
 		List<PostInfo> postInfoList = getSimpleJdbcTemplate().query(
-				"select * from post_info where user_name=:user_name)",
+				"select * from post_info where user_name=:user_name",
 				new PostInfoMapper(),
 				new MapSqlParameterSource().addValue(Constants.user_name,
 						postInfo.getUser_name()));

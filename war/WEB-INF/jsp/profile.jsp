@@ -1,3 +1,4 @@
+    <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <!DOCTYPE html>
 <!-- saved from url=(0043)http://codefusionlab.com/slider_steps2.html -->
 <html>
@@ -17,6 +18,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/ui/1.8.20/jquery-ui.min.js" type="text/javascript"></script>
     <script>
+
+
     $(function() {
 
         $( "#slider" ).slider({
@@ -74,6 +77,12 @@
 				</div>
 				
 				<div class="blog-typed">
+                    <c:forEach items="${model.post_info_list}" var="current">
+                        <tr>
+                            <td><c:out value="${current.post_text}" /><td>
+                            <td><c:out value="${current.timestamp}" /><td>
+                        </tr>
+                    </c:forEach>
 				</div>
 				
 			</div>

@@ -14,10 +14,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import edu.web.bean.PostInfo;
+import edu.web.bean.UserInfo;
 import edu.web.dainterface.IPostDao;
 import edu.web.dainterface.IUserDao;
 
@@ -26,25 +30,25 @@ import edu.web.dainterface.IUserDao;
  * 
  */
 
-public class LoginController implements Controller {
+@Controller
+@RequestMapping(value = "/login")
+public class LoginController {
 
 	private IPostDao postDao;
 	private IUserDao userDao;
 
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView processlogin(
+			@ModelAttribute("userInfo") UserInfo userinfo,
+			Map<String, Object> myModel) throws ServletException, IOException {
 
 		int flag = 0;
-		Map<String, Object> myModel = new HashMap<String, Object>();
 		String user_name = "";
 		String password = "";
 
-		Map<String, String[]> parameters = request.getParameterMap();
-		if (parameters.get("user_id") != null
-				&& parameters.get("password") != null) {
-			user_name = parameters.get("user_name")[0].toString();
-			password = parameters.get("password")[0].toString();
-		}
+		user_name = userinfo.getUser_name();
+		password = userinfo.getPassword();
+
 		List<PostInfo> post_info_list = new ArrayList<PostInfo>();
 		flag = this.userDao.check_user(user_name, password);
 
@@ -67,6 +71,8 @@ public class LoginController implements Controller {
 			}
 		}
 		myModel.put("post_info_list", post_info_list);
+		System.out.println("Success till login"+post_info_list.size());
+		System.out.println("Data"+post_info_list.get(0).getPost_text());
 
 		return new ModelAndView("profile", "model", myModel);
 
