@@ -20,6 +20,14 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<bean id="postDao" class="edu.web.dao.PostDao">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="userDao" class="edu.web.dao.UserDao">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />

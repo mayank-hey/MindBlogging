@@ -53,6 +53,11 @@
 		<property name="productManager" ref="productManager" />
 	</bean>
 
+	<bean id="postInfoController" class="edu.web.controller.PostInfoController">
+		<property name="postDao" ref="postDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+
 	<bean id="priceIncreaseFormController" class="edu.web.controller.PriceIncreaseFormController">
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="priceIncrease" />
@@ -77,6 +82,15 @@
 				<prop key="/hello2.htm">helloController</prop>
 				<prop key="/priceincrease.htm">
 					priceIncreaseFormController
+				</prop>
+				<prop key="/add_post.htm">
+					postInfoController
+				</prop>
+				<prop key="/update_post.htm">
+					postInfoController
+				</prop>
+				<prop key="/fetch_blog_posts.htm">
+					postInfoController
 				</prop>
 			</props>
 		</property>
