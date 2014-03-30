@@ -35,7 +35,6 @@ public class PostInfoController {
 		if (flag == 1) {
 			if (postInfo.getPost_terms() != null
 					&& postInfo.getPost_terms().size() != 0) {
-				System.out.println("inside list loop");
 				String term_list = "";
 				for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
 					if (i == 0)
