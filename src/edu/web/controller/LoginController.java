@@ -68,7 +68,8 @@ public class LoginController {
 			}
 		}
 		myModel.put("post_info_list", post_info_list);
-		System.out.println("Success till login"+post_info_list.size());
+		myModel.put("logged_in_user", user_name);
+		myModel.put("emo_score", post_info_list.get(0).getEmo_score());
 		System.out.println("Data"+post_info_list.get(0).getPost_text());
 
 		return new ModelAndView("profile", "model", myModel);

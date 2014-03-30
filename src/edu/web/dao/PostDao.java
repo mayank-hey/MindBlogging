@@ -52,32 +52,20 @@ public class PostDao extends SimpleJdbcDaoSupport implements IPostDao {
 	}
 
 	public List<PostInfo> getBlogPosts(PostInfo postInfo) {
-		List<PostInfo> postInfoList = getSimpleJdbcTemplate().query(
-				"select * from post_info where user_name=:user_name",
-				new PostInfoMapper(),
-				new MapSqlParameterSource().addValue(Constants.user_name,
-						postInfo.getUser_name()));
+		List<PostInfo> postInfoList = getSimpleJdbcTemplate()
+				.query("select * from post_info where user_name=:user_name order by post_id desc",
+						new PostInfoMapper(),
+						new MapSqlParameterSource().addValue(
+								Constants.user_name, postInfo.getUser_name()));
 		return postInfoList;
 	}
 
 	public PostInfo updatePost(PostInfo postInfo) {
 		int count = getSimpleJdbcTemplate()
-				.update("update post_info set post_id=:post_id,user_name=:user_name,post_title=:post_title,post_text=:post_text,post_terms=:post_terms,emo_score=:emo_score,timestamp=:timestamp",
-						new MapSqlParameterSource()
+				.update("update post_info set emo_score=:emo_score where post_id=:post_id",
+						new MapSqlParameterSource().addValue(Constants.emo_score, postInfo.getEmo_score())
 								.addValue(Constants.post_id,
-										postInfo.getPost_id())
-								.addValue(Constants.user_name,
-										postInfo.getUser_name())
-								.addValue(Constants.post_title,
-										postInfo.getPost_title())
-								.addValue(Constants.post_text,
-										postInfo.getPost_text())
-								.addValue(Constants.post_terms,
-										postInfo.getPost_terms_list())
-								.addValue(Constants.emo_score,
-										postInfo.getEmo_score())
-								.addValue(Constants.timestamp,
-										postInfo.getTimestamp()));
+										postInfo.getPost_id()));
 		return postInfo;
 	}
 

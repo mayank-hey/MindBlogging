@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 public class Calculator {
 	
-	int calculateScore(ArrayList<Integer> scores, ArrayList<Timestamp> times){
-		int latestScore = scores.get(scores.size()-1);
-		long lastTime = times.get(times.size()-1).getTime();
+	public int calculateScore(ArrayList<Integer> scores, ArrayList<Timestamp> times){
+		int latestScore = scores.get(0);
+		long lastTime = times.get(0).getTime();
 		
 		long sumOfInvertedTimeDiff = 0;
 		long sumOfWtdScoreDiff = 0;
-		for(int i=0; i<times.size()-2; i++){
+		for(int i=1; i<times.size()-1; i++){
 			long currTime = times.get(i).getTime();
 			int currScore = scores.get(i);
 			sumOfInvertedTimeDiff += 1/(lastTime-currTime);

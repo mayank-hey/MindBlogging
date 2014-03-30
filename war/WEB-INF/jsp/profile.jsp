@@ -28,28 +28,105 @@
             max: 10,
             step: 1,
             slide: function( event, ui ) {
-                //$( "#emo_score" ).val( ui.value );
+            //$( "#emo_score" ).val( ui.value );
             }
         });
     });
+    
+    $(document).ready(function(){
+  $( "#slider" ).slider({
+            value:$('#emo_score').val(),
+            min: 0,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+            //$( "#emo_score" ).val( ui.value );
+            }
+        });
+});
 	
 	function sendBlogData() {
  
     // get inputs
     var blog = new Object();
-    blog.title = $('#title').val();
-	blog.postblog = $('#postblog').val();
+    blog.post_title = $('#title').val();
+	blog.post_text = $('#postblog').val();
+    blog.user_name = $('#user_id').val();
  
     $.ajax({
-        url: "jsonservlet",
+        url: "http://localhost:8080/hd_tool/add_post.htm",
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify(blog),
         contentType: 'application/json',
         mimeType: 'application/json',
  
-        success: function (data) {
-			window.location.replace(http://localhost:8080/hd_tool/profile.html)
+        success: function (response) {
+            $('#old_posts').html("");
+            $('#title').val("");
+            $('#postblog').val("");
+            var obj1 = JSON.stringify(response);
+            var obj = JSON.parse(obj1);
+            var avg_emo=0;
+            for (var i = 0, len = obj.length; i < len; ++i) {
+                var post = obj[i];
+                if(i==0){avg_emo=post.emo_score;}
+                $('#old_posts').append("<div class=\"blog-content\"><textarea readonly class=\"form-control\" resizable=\"false\" required>"+post.post_text+"</textarea><p>"+post.timestamp+"</p></div>");
+            }
+            $( "#slider" ).slider({
+                value:avg_emo,
+                min: 0,
+                max: 10,
+                step: 1,
+                slide: function( event, ui ) {
+                //$( "#emo_score" ).val( ui.value );
+                }
+            });
+
+        },
+        error:function(data,status,er) {
+            alert("error: "+data+" status: "+status+" er:"+er);
+        }
+    });
+}
+
+function updatelevel() {
+ 
+    // get inputs
+    var blog = new Object();
+    blog.emo_score = $('#slider').slider("value");
+    blog.user_name = $('#user_id').val();
+ 
+    $.ajax({
+        url: "http://localhost:8080/hd_tool/update_post.htm",
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(blog),
+        contentType: 'application/json',
+        mimeType: 'application/json',
+ 
+        success: function (response) {
+            $('#old_posts').html("");
+            $('#title').val("");
+            $('#postblog').val("");
+            var obj1 = JSON.stringify(response);
+            var obj = JSON.parse(obj1);
+            var avg_emo=0;
+            for (var i = 0, len = obj.length; i < len; ++i) {
+                var post = obj[i];
+                if(i==0){avg_emo=post.emo_score;}
+                $('#old_posts').append("<div class=\"blog-content\"><textarea readonly class=\"form-control\" resizable=\"false\" required>"+post.post_text+"</textarea><p>"+post.timestamp+"</p></div>");
+            }
+            $( "#slider" ).slider({
+                value:avg_emo,
+                min: 0,
+                max: 10,
+                step: 1,
+                slide: function( event, ui ) {
+                //$( "#emo_score" ).val( ui.value );
+                }
+            });
+
         },
         error:function(data,status,er) {
             alert("error: "+data+" status: "+status+" er:"+er);
@@ -76,18 +153,7 @@
 					<button class="btn btn-lg btn-primary btn-block blog-button" type="button" onclick="sendBlogData()">Post</button>
 				</div>
 				
-				<div class="blog-typed">
-                    <c:forEach items="${model.post_info_list}" var="current">
-                        <tr>
-                            <td><c:out value="${current.post_text}" /><td>
-                            <td><c:out value="${current.timestamp}" /><td>
-                        </tr>
-                    </c:forEach>
-				</div>
-				
-			</div>
-		
-			<div class="slide">
+				<div class="slide">
 				<p>
 					<label for="amount">Your current level:</label>
 				</p>
@@ -113,8 +179,21 @@
 			</div>
 		
 			<div class="submit">
-				<button class="btn btn-lg btn-primary btn-block" type="submitbutton">Submit</button>
+				<button class="btn btn-lg btn-primary btn-block" type="button" onclick="updatelevel()">Submit</button>
 			</div>
+				
+				<div id="old_posts" class="blog-typed">
+                    <c:forEach items="${model.post_info_list}" var="current">
+                        <div class="blog-content">
+                            <textarea readonly class="form-control" resizable="false" required><c:out value="${current.post_text}" /></textarea>
+                            <p><c:out value="${current.timestamp}" /></p>
+                        </div>
+                    </c:forEach>
+				</div>
+				
+			</div>
+		
+			
 		
 			<div class="userlist">
 				<ul type="none">
@@ -125,6 +204,8 @@
 					<li class="user" ><div><div><label class="username userlabel">User:username</label></div><div><label class="level userlabel" style="float:left;">Level:7</label><button class="btn btn-lg btn-primary user-button" type="button">Mail!</button></div></div></li>
 				</ul> 
 			</div>
+        <input type="hidden" id="user_id" value="${model.logged_in_user}"/>
+        <input type="hidden" id="emo_score" value="${model.emo_score}"/>
 		
 		</form>
     </div>
