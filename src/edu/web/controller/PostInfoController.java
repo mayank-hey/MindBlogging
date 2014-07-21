@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.web.bean.AnalysisResult;
 import edu.web.bean.PostInfo;
+import edu.web.bo.SendGridClient;
 import edu.web.bo.SkyttleClient;
 import edu.web.dainterface.IPostDao;
 import edu.web.util.Calculator;
@@ -87,6 +88,13 @@ public class PostInfoController {
 			}
 		}
 
+		Calculator cal = new Calculator();
+		ArrayList<Integer> scores = new ArrayList<Integer>();
+		for (int i = 0; i < post_info_list.size(); i++) {
+			scores.add(post_info_list.get(i).getEmo_score());
+		}
+		if (cal.needsHelp(scores))
+			SendGridClient.sendInvitation();
 		return post_info_list;
 	}
 
@@ -116,19 +124,19 @@ public class PostInfoController {
 	public @ResponseBody
 	List<PostInfo> update(@RequestBody PostInfo postInfo) throws Exception {
 
-//		if (postInfo.getPost_terms() != null
-//				&& postInfo.getPost_terms().size() != 0) {
-//			String term_list = "";
-//			for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
-//				if (i == 0)
-//					term_list = postInfo.getPost_terms().get(i);
-//				else
-//					term_list = term_list + ","
-//							+ postInfo.getPost_terms().get(i);
-//			}
-//			postInfo.setPost_terms_list(term_list);
-//		}
-		
+		// if (postInfo.getPost_terms() != null
+		// && postInfo.getPost_terms().size() != 0) {
+		// String term_list = "";
+		// for (int i = 0; i < postInfo.getPost_terms().size(); i++) {
+		// if (i == 0)
+		// term_list = postInfo.getPost_terms().get(i);
+		// else
+		// term_list = term_list + ","
+		// + postInfo.getPost_terms().get(i);
+		// }
+		// postInfo.setPost_terms_list(term_list);
+		// }
+
 		List<PostInfo> tmp_post_info_list = new ArrayList<PostInfo>();
 
 		tmp_post_info_list = this.postDao.getBlogPosts(postInfo);
